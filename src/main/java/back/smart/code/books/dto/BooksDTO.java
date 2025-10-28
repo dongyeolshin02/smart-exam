@@ -59,7 +59,7 @@ public class BooksDTO implements Serializable {
 
     @Data
     public static class Request {
-
+        private String bkCode;
         private String bkName;
         private String descriptions;
         private String contents;
@@ -71,6 +71,10 @@ public class BooksDTO implements Serializable {
         public static BooksEntity to (Request request) {
 
             BooksEntity booksEntity = new BooksEntity();
+
+            //bkCode가 있을때만 추가
+            if(request.getBkCode() != null) booksEntity.setBkCode(request.getBkCode());
+
             booksEntity.setBkName(request.getBkName());
             booksEntity.setDescriptions(request.getDescriptions());
             booksEntity.setContents(request.getContents());

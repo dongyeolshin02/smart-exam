@@ -1,11 +1,13 @@
 package back.smart.code.books.service;
 
 import back.smart.code.books.dto.BooksDTO;
+import back.smart.code.books.dto.BooksFileDTO;
 import back.smart.code.books.entity.BooksEntity;
 import back.smart.code.books.entity.BooksFileEntity;
 import back.smart.code.books.repository.BooksRepository;
 import back.smart.code.common.dto.ApiResponse;
 import back.smart.code.common.utils.CommonFileUtils;
+import back.smart.code.common.utils.CommonUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -72,8 +74,9 @@ public class BookService {
         booksFileEntity.setFilePath(filePath);
 
         BooksEntity entity = new BooksEntity();
-        //갤러리 랜덤 ID 생성
-        String newCode = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
+
+        //랜덤 ID 생성
+        String newCode = CommonUtils.getRandUUID();
 
         entity.setBkCode(newCode);
         entity.setBkName(request.getBkName());
@@ -88,6 +91,59 @@ public class BookService {
 
         return ApiResponse.ok(null);
     }
+
+
+    @Transactional
+    public ApiResponse<String> updateBooks(BooksDTO.Request request) throws Exception {
+
+        //기존 책 불러오기
+        BooksEntity entity =
+                booksRepository.getBook(request.getBkCode())
+                        .orElseThrow(() -> new RuntimeException("책이 없음"));
+
+        //DTO로 만들기
+        BooksDTO.Response book = BooksDTO.Response.of(entity);
+
+        //내용 업데이트
+        entity.setBkName(request.getBkName());
+        entity.setContents(request.getContents());
+        entity.setStock(request.getStock());
+        entity.setPrice(request.getPrice());
+        entity.setTypes(request.getTypes());
+
+        //파일 교체
+        if(request.getFile() != null && !request.getFile().isEmpty()) {
+
+            Map<String, Object> fileMap = this.uploadImageFiles(request.getFile());
+            entity.getTbBooksFiles().clear();
+
+            if(fileMap != null) {
+                BooksFileEntity booksFileEntity = new BooksFileEntity();
+                booksFileEntity.setBfName(fileMap.get("originalName").toString());
+                booksFileEntity.setBfStoredName(fileMap.get("storedName").toString());
+                booksFileEntity.setThumbName(fileMap.get("thumbName").toString());
+                booksFileEntity.setFilePath(filePath);
+
+                entity.addFiles(booksFileEntity);
+            }else {
+                throw new RuntimeException("파일 업로드 실패");
+            }
+        }
+
+        //기존 파일 삭제
+        if(request.getFile() != null && !request.getFile().isEmpty()) {
+            if(book.getBookfileList() != null && book.getBookfileList().size() > 0) {
+                for(BooksFileDTO.Response fileDTO : book.getBookfileList()) {
+                    String oldFilePath = fileDTO.getFilePath() + fileDTO.getBfStoredName();
+                    //파일 삭제
+                    fileUtils.deleteFile(oldFilePath);
+                }
+            }
+        }
+
+        return ApiResponse.ok(null);
+    }
+
 
 
     //파일 업로드 별도 처리
@@ -122,4 +178,7 @@ public class BookService {
 
         return fileMap;
     }
+
+
+
 }

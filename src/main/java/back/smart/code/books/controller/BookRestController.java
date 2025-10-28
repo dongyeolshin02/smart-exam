@@ -43,4 +43,11 @@ public class BookRestController {
         return ResponseEntity.ok(bookService.createBooks(booksDTO));
     }
 
+
+
+    @PutMapping("/books")
+    public ResponseEntity<ApiResponse<?>> updateBook(@ModelAttribute  BooksDTO.Request booksDTO) throws Exception {
+        return ResponseEntity.ok(bookService.createBooks(booksDTO));
+    }
+
 }
