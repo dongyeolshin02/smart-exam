@@ -1,12 +1,18 @@
 package back.smart.code.books.service;
 
-import back.smart.code.books.repository.BooksImgRepository;
+import back.smart.code.books.dto.BooksDTO;
+import back.smart.code.books.entity.BooksEntity;
+import back.smart.code.books.repository.BooksRepository;
 import back.smart.code.common.utils.CommonFileUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -16,19 +22,22 @@ public class BookService {
     @Value("${server.file.upload.path}")
     private String filePath;
 
-    @Value("${server.file.editor.path}")
-    private String editorPath;
+    private final  CommonFileUtils commonFileUtils;
+    private final BooksRepository booksRepository;
 
-    private final BooksImgRepository booksImgRepository;
 
-    private CommonFileUtils commonFileUtils;
+    public Map<String, Object> getBooksList(Pageable pageable) throws Exception {
 
-    public Map<String, Object> uploadEditorImg(MultipartFile file) throws Exception{
+        Page<BooksEntity> booksPage = booksRepository.findAll(pageable);
+        List<BooksDTO.Response> bookList =
+                booksPage.getContent().stream()
+                .map(BooksDTO.Response::of).toList();
 
-        Map<String, Object> fileMap = commonFileUtils.uploadFile(file, editorPath);
-        String imageUrl = "http://localhost:9090/img/editor/" + fileMap.get("storedName");
-
-        fileMap.put("imageUrl",imageUrl);
-        return fileMap;
+        return Map.of(
+                "total" , booksPage.getTotalElements(),
+                "data" , bookList,
+                "page" , pageable.getPageNumber()
+             );
     }
+
 }
