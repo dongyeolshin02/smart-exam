@@ -1,6 +1,7 @@
 package back.smart.code.books.controller;
 
 
+import back.smart.code.books.dto.BooksDTO;
 import back.smart.code.books.entity.BooksEntity;
 import back.smart.code.books.service.BookService;
 import back.smart.code.common.dto.ApiResponse;
@@ -26,6 +27,8 @@ public class BookRestController {
 
     private final BookService bookService;
 
+
+
     @GetMapping("/books")
     public ResponseEntity<ApiResponse<?>> getBooks(
             @PageableDefault(size = 10, page = 0, sort="createAt",
@@ -33,6 +36,11 @@ public class BookRestController {
 
         Map<String, Object> result = bookService.getBooksList(pageable);
         return ResponseEntity.ok().body(ApiResponse.ok(result));
+    }
+
+    @PostMapping("/books")
+    public ResponseEntity<ApiResponse<?>> addBook(@ModelAttribute  BooksDTO.Request booksDTO) throws Exception {
+        return ResponseEntity.ok(bookService.createBooks(booksDTO));
     }
 
 }

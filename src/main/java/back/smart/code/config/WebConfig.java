@@ -12,25 +12,17 @@ import java.io.File;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${server.file.gallery.path}")
+    @Value("${server.file.upload.path}")
     private String filePath;
 
-    @Value("${server.file.editor.path}")
-    private String editorPath;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
         String imgPath = this.filePath ;
 
-        registry.addResourceHandler("/img/gall/**")
+        registry.addResourceHandler("/static/img/**")
                 .addResourceLocations("file:///" + imgPath)
-                .setCachePeriod(0)
-                .resourceChain(true)
-                .addResolver(new PathResourceResolver());
-
-        registry.addResourceHandler("/img/editor/**")
-                .addResourceLocations("file:///" + editorPath)
                 .setCachePeriod(0)
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());

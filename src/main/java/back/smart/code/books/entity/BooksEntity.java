@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -36,6 +37,12 @@ public class BooksEntity extends BaseTimeEntity {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<BooksFileEntity> tbBooksFiles = new LinkedHashSet<>();
 
+
+    public void addFiles(BooksFileEntity entity) {
+        if(tbBooksFiles == null) this.tbBooksFiles = new HashSet<>();
+        entity.setBook(this);
+        tbBooksFiles.add(entity);
+    }
 }
 
 
