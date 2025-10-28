@@ -86,7 +86,7 @@ public class CommonFileUtils {
 
 
     //썸네일 만들기
-    public static String makeThumbnail(File file,  int width, int height, String filePath) {
+    public  String makeThumbnail(File file,  int width, int height, String filePath) {
 
         String thumbName = "";
         if(file != null) {
