@@ -85,5 +85,11 @@ public class UserService {
         return ApiResponse.ok(pageResponse);
     }
 
+    public ApiResponse<?> getUser(String userId) throws Exception{
+        UserEntity entity =  userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+        UserDTO.Response  user = UserDTO.Response.of(entity);
+        return ApiResponse.ok(user);
+    }
 
 }

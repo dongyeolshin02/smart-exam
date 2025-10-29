@@ -23,7 +23,6 @@ public class BookRestController {
     private final BookService bookService;
 
 
-
     @GetMapping("/books")
     public ResponseEntity<ApiResponse<?>> getBooks(
             @PageableDefault(size = 10, page = 0, sort="createAt",
@@ -31,6 +30,7 @@ public class BookRestController {
 
         return ResponseEntity.ok().body(ApiResponse.ok(bookService.getBooksList(pageable)));
     }
+
 
     @PostMapping("/books")
     public ResponseEntity<ApiResponse<?>> addBook(@ModelAttribute  BooksDTO.Request booksDTO) throws Exception {
@@ -41,5 +41,4 @@ public class BookRestController {
     public ResponseEntity<ApiResponse<?>> updateBook(@ModelAttribute  BooksDTO.Request booksDTO) throws Exception {
         return ResponseEntity.ok(bookService.createBooks(booksDTO));
     }
-
 }
