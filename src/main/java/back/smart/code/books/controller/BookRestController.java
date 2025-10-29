@@ -32,6 +32,14 @@ public class BookRestController {
     }
 
 
+    @GetMapping("/books/{bkCode}")
+    public ResponseEntity<ApiResponse<?>> getBook(@PathVariable("bkCode")String bkCode) throws Exception {
+
+        return ResponseEntity.ok().body(ApiResponse.ok(bookService.getBook(bkCode)));
+    }
+
+
+
     @PostMapping("/books")
     public ResponseEntity<ApiResponse<?>> addBook(@ModelAttribute  BooksDTO.Request booksDTO) throws Exception {
         return ResponseEntity.ok(bookService.createBooks(booksDTO));
