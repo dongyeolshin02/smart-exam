@@ -10,11 +10,7 @@ server:
   port: 9090
   file:
     upload:
-      path: C:\\files\\upload\\board\\
-    gallery:
-      path: C:\\files\\upload\\gallery\\
-    editor:
-      path: C:\\files\\upload\\editor\\
+      path: C:\\files\\upload\\books\\
 
 spring:
   main:

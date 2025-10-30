@@ -16,7 +16,7 @@ import java.util.*;
 public class CommonFileUtils {
 
 
-    public static Map<String, Object> uploadFile(MultipartFile file, String path) {
+    public  Map<String, Object> uploadFile(MultipartFile file, String path) {
         Map<String, Object> map = new HashMap<>();
 
         if(file != null && !file.isEmpty()) {
@@ -47,7 +47,7 @@ public class CommonFileUtils {
         return map;
     }
 
-    public static List<Map<String, Object>> uploadFile(List<MultipartFile> files, String path) {
+    public  List<Map<String, Object>> uploadFile(List<MultipartFile> files, String path) {
         List<Map<String, Object>> mapList = new ArrayList<>();
 
         if(files != null && !files.isEmpty()) {
@@ -72,7 +72,7 @@ public class CommonFileUtils {
 
                     Map<String, Object> map = new HashMap<>();
                     map.put("storedName", storedName);
-                    map.put("originalName", fileName);
+                    map.put("fileName", fileName);
                     mapList.add(map);
 
                 } catch (Exception e) {
@@ -86,7 +86,7 @@ public class CommonFileUtils {
 
 
     //썸네일 만들기
-    public static String makeThumbnail(File file,  int width, int height, String filePath) {
+    public  String makeThumbnail(File file,  int width, int height, String filePath) {
 
         String thumbName = "";
         if(file != null) {
